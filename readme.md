@@ -37,6 +37,13 @@ make
 - 5.cmake工程注意包含include目录和lib目录
 
 
+
+
 ## 开源库使用
 
 - 日志 ：spdlog
+- web: [mongoose](https://github.com/cesanta/mongoose)
+
+
+## start!!!
+将模板mongoose wizard  复制进工程
