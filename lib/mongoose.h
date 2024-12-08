@@ -1007,6 +1007,7 @@ void mg_log_set_fn(mg_pfn_t fn, void *param);
   } while (0)
 #endif
 
+#define MG_print(args) MG_LOG(0, args)
 #define MG_ERROR(args) MG_LOG(MG_LL_ERROR, args)
 #define MG_INFO(args) MG_LOG(MG_LL_INFO, args)
 #define MG_DEBUG(args) MG_LOG(MG_LL_DEBUG, args)

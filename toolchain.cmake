@@ -1,6 +1,6 @@
 set(CMAKE_SYSTEM_NAME Linux)
 set(CMAKE_SYSTEM_PROCESSOR arm)
-set(CROSS_CHAIN_PATH  arm-rockchip830-linux-uclibcgnueabihf-)
+set(CROSS_CHAIN_PATH  arm-linux-gnueabihf-)
 set(CMAKE_C_COMPILER ${CROSS_CHAIN_PATH}gcc)
 set(CMAKE_CXX_COMPILER ${CROSS_CHAIN_PATH}g++)
 

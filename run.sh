@@ -1,5 +1,16 @@
 #!/bin/bash
-
+# 检查是否使用交叉编译工具链
+USE_CROSS_COMPILE=false
+for arg in "$@"
+do
+    if [ "$arg" == "--cross" ]; then
+        USE_CROSS_COMPILE=true
+        break
+    fi
+done
+if [ "$USE_CROSS_COMPILE" == true ]; then
+    rm -rf build
+fi
 # 保存当前路径
 ROOTPATH=`pwd`
 
@@ -19,15 +30,7 @@ fi
 # 运行 cmake
 # cmake -DCMAKE_TOOLCHAIN_FILE=./toolchain.cmake  ..
 # cmake ..
-# 检查是否使用交叉编译工具链
-USE_CROSS_COMPILE=false
-for arg in "$@"
-do
-    if [ "$arg" == "--cross" ]; then
-        USE_CROSS_COMPILE=true
-        break
-    fi
-done
+
 
 # 运行 cmake，根据是否使用交叉编译来选择参数
 if [ "$USE_CROSS_COMPILE" == true ]; then

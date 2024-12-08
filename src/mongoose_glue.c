@@ -208,10 +208,18 @@ void glue_set_state(struct state *data) {
 static struct leds s_leds = {false, true, false};
 void glue_get_leds(struct leds *data) {
   *data = s_leds;  // Sync with your device
-  MG_INFO(("!!!!!!!!!!!!!!!!LED STATUS CHANGED!!!!!!!!!!!!!!!!!"));
+
+
 }
+
+extern void update_led_status(bool led1,bool led2,bool led3);
+
 void glue_set_leds(struct leds *data) {
   s_leds = *data; // Sync with your device
+  MG_INFO(("!!!!!!!!!!!!!!!!LED STATUS CHANGED!!!!!!!!!!!!!!!!!"));
+  MG_INFO(("s_leds[0]= %d   s_leds[1]= %d   s_leds[2]= %d", s_leds.led1,s_leds.led2,s_leds.led3));
+
+  update_led_status(s_leds.led1,s_leds.led2,s_leds.led3);
 
 }
 
