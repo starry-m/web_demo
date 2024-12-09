@@ -22,10 +22,10 @@ message(STATUS "C++ Compiler: ${CMAKE_CXX_COMPILER}")
 file(GLOB_RECURSE SRC_DIR_LIST "src/*.cpp" "src/*.c")	#遍历获取source/路径下所有的*.cpp和*.c文件列表
 
 aux_source_directory(lib   lib_LIST)
-set(ini  ${CMAKE_SOURCE_DIR}/lib/inih/ini.c ${CMAKE_SOURCE_DIR}/lib/inih/cpp/INIReader.cpp)
+#set(ini  ${CMAKE_SOURCE_DIR}/lib/inih/ini.c ${CMAKE_SOURCE_DIR}/lib/inih/cpp/INIReader.cpp)
 add_compile_options(-O2)
 
-add_executable(${PROJECT_NAME} ${SRC_DIR_LIST} ${lib_LIST} ${ini})
+add_executable(${PROJECT_NAME} ${SRC_DIR_LIST} ${lib_LIST})
 
 target_include_directories(${PROJECT_NAME} PUBLIC include src)
 target_include_directories(${PROJECT_NAME} PUBLIC lib)
