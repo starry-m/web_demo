@@ -1,0 +1,6 @@
+[submodule "lib/fmt"]
+	path = lib/fmt
+	url = https://github.com/fmtlib/fmt.git
+[submodule "lib/simpleini"]
+	path = lib/simpleini
+	url = https://github.com/brofield/simpleini.git
