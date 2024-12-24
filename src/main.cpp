@@ -45,7 +45,7 @@ void update_led_status(bool led1,bool led2,bool led3)
 void web_thread()
 {
     MG_INFO(("HAL initialised, starting firmware..."));
-
+    //http://127.0.0.1:8080/  HTTP_URL "http://0.0.0.0:8080"
     // This blocks forever. Call it at the end of main(), or in a
     // separate RTOS task. Give that task 8k stack space.
     mongoose_init();
@@ -67,10 +67,10 @@ int main(int argc, char* argv[]) {
         run_led=1;
 
     }
-    sysConfigInit();
+//    sysConfigInit();
   // Cross-platform hardware init
   hal_init();
-//    std::thread mongoose_thread(web_thread);
-//    mongoose_thread.join();
+    std::thread mongoose_thread(web_thread);
+    mongoose_thread.join();
   return 0;
 }

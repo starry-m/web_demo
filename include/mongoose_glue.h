@@ -14,12 +14,12 @@ extern "C" {
 #define WIZARD_ENABLE_HTTP 1
 #define WIZARD_ENABLE_HTTPS 1
 #define WIZARD_ENABLE_HTTP_UI 1
-#define WIZARD_ENABLE_HTTP_UI_LOGIN 1
+#define WIZARD_ENABLE_HTTP_UI_LOGIN 0
 
-#define WIZARD_ENABLE_MQTT 1
-#define WIZARD_MQTT_URL "mqtt://broker.hivemq.com:1883"
+#define WIZARD_ENABLE_MQTT 0
+#define WIZARD_MQTT_URL ""
 
-#define WIZARD_ENABLE_SNTP 1  // Enable time sync.
+#define WIZARD_ENABLE_SNTP 0  // Enable time sync.
 #define WIZARD_SNTP_TYPE 0    // 0: default Google, 1: DHCP, 2: custom
 #define WIZARD_SNTP_URL "udp://time.google.com:123"  // Custom SNTP server URL
 #define WIZARD_SNTP_INTERVAL_SECONDS 3600            // Frequency of SNTP syncs
@@ -28,7 +28,7 @@ extern "C" {
 #define WIZARD_DNS_URL "udp://8.8.8.8:53"  // Custom DNS server URL
 #define WIZARD_CAPTIVE_PORTAL 0
 
-#define WIZARD_ENABLE_MODBUS 1
+#define WIZARD_ENABLE_MODBUS 0
 #define WIZARD_MODBUS_PORT 502
 
 #ifndef WIZARD_REBOOT_TIMEOUT_MS
@@ -63,74 +63,29 @@ void glue_update_state(void);
 
 // Firmware Glue
 
-
-
-extern struct mg_connection *g_mqtt_conn;  // MQTT client connection
-
-void glue_mqtt_tls_init(struct mg_connection *c);
-struct mg_connection *glue_mqtt_connect( struct mg_mgr *, void (*ev_handler)(struct mg_connection *, int, void *));
-void glue_mqtt_on_connect(struct mg_connection *c, int code);
-void glue_mqtt_on_message(struct mg_connection *c, struct mg_str topic,
-                          struct mg_str data);
-void glue_mqtt_on_cmd(struct mg_connection *c, struct mg_mqtt_message *mm);
-
-
-void glue_sntp_on_time(uint64_t utc_time_in_milliseconds);
-
-
-bool glue_modbus_read_reg(uint16_t address, uint16_t *value);
-bool glue_modbus_write_reg(uint16_t address, uint16_t value);
-
-
-int    glue_authenticate(const char *user, const char *pass);
-
-bool glue_check_reboot(void);
-void glue_start_reboot(void);
-void *glue_ota_begin_firmware_update(char *file_name, size_t total_size);
-bool glue_ota_end_firmware_update(void *context);
-bool glue_ota_write_firmware_update(void *context, void *buf, size_t len);
-void *glue_file_open_file_upload(char *file_name, size_t total_size);
-bool glue_file_close_file_upload(void *context);
-bool glue_file_write_file_upload(void *context, void *buf, size_t len);
-size_t glue_graph_get_graph1(uint32_t from, uint32_t to,
-                              uint32_t *x_values, double *y_values, size_t len);
-struct state {
-  int speed;
-  int temperature;
-  int humidity;
-  int uptime;
-  char version[20];
-  bool online;
-  bool lights;
-  int level;
-};
-void glue_get_state(struct state *);
-void glue_set_state(struct state *);
-
 struct leds {
-  bool led1;
-  bool led2;
-  bool led3;
+    bool led1_sate;
+    bool led2_sate;
+    bool led3_sate;
+    bool led4_sate;
+    int led1_mode;
+    int led2_mode;
+    int led3_mode;
+    int led4_mode;
+    int led1_blink_frequency;
+    int led2_blink_frequency;
+    int led3_blink_frequency;
+    int led4_blink_frequency;
 };
 void glue_get_leds(struct leds *);
 void glue_set_leds(struct leds *);
 
-struct settings {
-  char string_val[40];
-  int log_level;
-  double double_val;
-  int int_val;
-  bool bool_val;
+struct state {
+    int cpu;
+    int mem;
 };
-void glue_get_settings(struct settings *);
-void glue_set_settings(struct settings *);
-
-struct security {
-  char admin_password[40];
-  char user_password[40];
-};
-void glue_get_security(struct security *);
-void glue_set_security(struct security *);
+void glue_get_state(struct state *);
+void glue_set_state(struct state *);
 
 
 #ifdef __cplusplus
