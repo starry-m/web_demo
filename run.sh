@@ -8,29 +8,34 @@ do
         break
     fi
 done
+
+# 设置构建目录，根据是否使用交叉编译选择不同目录
 if [ "$USE_CROSS_COMPILE" == true ]; then
-    rm -rf build
+    BUILD_DIR="build_arm"
+else
+    BUILD_DIR="build"
 fi
+
 # 保存当前路径
 ROOTPATH=`pwd`
 
-# rm -rf build
+# 如果是交叉编译，则删除 build_arm 目录
+#if [ "$USE_CROSS_COMPILE" == true ]; then
+#    rm -rf "$ROOTPATH/$BUILD_DIR"
+#fi
 
-# 检查并创建 build 目录
-if [ ! -d "$ROOTPATH/build" ]; then
-    mkdir "$ROOTPATH/build"
+# 检查并创建构建目录
+if [ ! -d "$ROOTPATH/$BUILD_DIR" ]; then
+    mkdir "$ROOTPATH/$BUILD_DIR"
 fi
 
-# 进入 build 目录
-cd "$ROOTPATH/build"
-# 检查并创建 build 目录
-if [ ! -d "$ROOTPATH/build/log" ]; then
-    mkdir "$ROOTPATH/build/log"
-fi
-# 运行 cmake
-# cmake -DCMAKE_TOOLCHAIN_FILE=./toolchain.cmake  ..
-# cmake ..
+# 进入构建目录
+cd "$ROOTPATH/$BUILD_DIR"
 
+# 检查并创建 log 目录
+if [ ! -d "$ROOTPATH/$BUILD_DIR/log" ]; then
+    mkdir "$ROOTPATH/$BUILD_DIR/log"
+fi
 
 # 运行 cmake，根据是否使用交叉编译来选择参数
 if [ "$USE_CROSS_COMPILE" == true ]; then
@@ -55,6 +60,7 @@ if [ $? -ne 0 ]; then
 fi
 
 echo -e "Build completed successfully!\n"
+
 # 打印可执行文件的大小
 EXECUTABLE="./web_demo"
 if [ -f "$EXECUTABLE" ]; then
@@ -63,8 +69,8 @@ if [ -f "$EXECUTABLE" ]; then
 else
     echo "Executable file not found!"
 fi
+
 # 运行生成的可执行文件（仅在非交叉编译情况下）
 if [ "$USE_CROSS_COMPILE" == false ]; then
     ./web_demo
-    # echo -e "Build completed successfully!\n"
 fi

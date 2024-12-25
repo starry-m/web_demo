@@ -15,18 +15,26 @@ LED::LED(int number){
     std::ostringstream s;
     s << LED_PATH << number;
     path = std::string(s.str());
+    removeTrigger();
 }
 LED::LED(std::string path,int number){
     this->number = number;
     std::ostringstream s;
     s << path << number;
     path = std::string(s.str());
+    removeTrigger();
 }
 void LED::writeLED(std::string filename, std::string value){
     std::ofstream fs;
-    fs.open((path+filename).c_str());
+    std::string fullPath = path + filename;
+    fs.open(fullPath.c_str());
+    if (!fs) {
+        std::cerr << "Failed to open file: " << fullPath << std::endl;
+        return;
+    }
     fs << value;
     fs.close();
+    std::cout << "Wrote " << value << " to " << fullPath << std::endl;
 }
 int LED::readLED(std::string filename){
     std::string r;
@@ -64,12 +72,25 @@ void LED::status_set(bool s)
         turnOff();
 }
 
-void LED::flash(std::string delayms = "50"){
+void LED::flash(std::string delaymson,std::string delaymsoff){
     std::cout << "Making LED" << number << " flash." << std::endl;
     writeLED("/trigger", "timer");
-    writeLED("/delay_on", delayms);
-    writeLED("/delay_off", delayms);
+    writeLED("/delay_on", delaymson);
+    writeLED("/delay_off", delaymsoff);
 }
+void LED::change_mode_status(bool state,int mode,int blink_delay_on,int blink_delay_off)
+{
+    if(0==mode)
+    {
+        writeLED("/trigger", "none");
+        writeLED("/brightness", state ? "1" : "0");
+        return ;
+    }
+    writeLED("/trigger", "timer");
+    writeLED("/delay_on", std::to_string(blink_delay_on));
+    writeLED("/delay_off", std::to_string(blink_delay_off));
+}
+
 
 void LED::outputState(){
     std::ifstream fs;

@@ -63,26 +63,45 @@ void glue_update_state(void);
 
 // Firmware Glue
 
-struct leds {
-    bool led1_sate;
-    bool led2_sate;
-    bool led3_sate;
-    bool led4_sate;
-    int led1_mode;
-    int led2_mode;
-    int led3_mode;
-    int led4_mode;
-    int led1_blink_frequency;
-    int led2_blink_frequency;
-    int led3_blink_frequency;
-    int led4_blink_frequency;
+struct led_1 {
+  bool sate;
+  int mode;
+  int blink_delay_on;
+  int blink_delay_off;
 };
-void glue_get_leds(struct leds *);
-void glue_set_leds(struct leds *);
+void glue_get_led_1(struct led_1 *);
+void glue_set_led_1(struct led_1 *);
+
+struct led_2 {
+  bool sate;
+  int mode;
+  int blink_delay_on;
+  int blink_delay_off;
+};
+void glue_get_led_2(struct led_2 *);
+void glue_set_led_2(struct led_2 *);
+
+struct led_3 {
+  bool sate;
+  int mode;
+  int blink_delay_on;
+  int blink_delay_off;
+};
+void glue_get_led_3(struct led_3 *);
+void glue_set_led_3(struct led_3 *);
+
+struct led_4 {
+  bool sate;
+  int mode;
+  int blink_delay_on;
+  int blink_delay_off;
+};
+void glue_get_led_4(struct led_4 *);
+void glue_set_led_4(struct led_4 *);
 
 struct state {
-    int cpu;
-    int mem;
+  int cpu;
+  int mem;
 };
 void glue_get_state(struct state *);
 void glue_set_state(struct state *);

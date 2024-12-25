@@ -30,8 +30,9 @@ add_executable(${PROJECT_NAME} ${SRC_DIR_LIST} ${lib_LIST})
 target_include_directories(${PROJECT_NAME} PUBLIC include src)
 target_include_directories(${PROJECT_NAME} PUBLIC lib)
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_SOURCE_DIR}/lib/inih ${CMAKE_SOURCE_DIR}/lib/inih/cpp)
-
-
+target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_SOURCE_DIR}/lib/fmt/include )
+find_package (Threads)
+target_link_libraries (${PROJECT_NAME} ${CMAKE_THREAD_LIBS_INIT})
 # add_subdirectory (glog )
 
 # message(STATUS "Found glog version: ${glog_VERSION}")

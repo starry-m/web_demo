@@ -47,3 +47,19 @@ make
 
 ## start!!!
 将模板mongoose wizard  复制进工程
+
+
+## 测试使用
+
+```shell
+Wrote timer to /sys/class/leds/beaglebone:green:usr0/trigger
+Failed to open file: /sys/class/leds/beaglebone:green:usr0/delay_on
+Failed to open file: /sys/class/leds/beaglebone:green:usr0/delay_off
+
+```
+出现写入权限不足的情况，加sudo执行即可
+
+``` shell
+terminate called after throwing an instance of 'std::system_error'   what():  Enable multithreading to use std::thread: Operation not permitted Aborted
+```
+出现多线程使用失败的情况，链接Threads就可以了

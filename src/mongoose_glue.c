@@ -8,21 +8,50 @@
 #include "mongoose_glue.h"
 
 void glue_init(void) {
-    MG_DEBUG(("Custom init done"));
+  MG_DEBUG(("Custom init done"));
+}
+extern void update_led_status(int number,bool sate,int mode,int blink_delay_on,int blink_delay_off);
+static struct led_1 s_led_1 = {false, 0, 100, 100};
+void glue_get_led_1(struct led_1 *data) {
+  *data = s_led_1;  // Sync with your device
+}
+void glue_set_led_1(struct led_1 *data) {
+  s_led_1 = *data; // Sync with your device
+  update_led_status(0,data->sate,data->mode,data->blink_delay_on,data->blink_delay_off);
 }
 
-static struct leds s_leds = {false, false, false, false, 0, 0, 0, 0, 100, 100, 100, 100};
-void glue_get_leds(struct leds *data) {
-    *data = s_leds;  // Sync with your device
+static struct led_2 s_led_2 = {false, 0, 100, 100};
+void glue_get_led_2(struct led_2 *data) {
+  *data = s_led_2;  // Sync with your device
 }
-void glue_set_leds(struct leds *data) {
-    s_leds = *data; // Sync with your device
+void glue_set_led_2(struct led_2 *data) {
+  s_led_2 = *data; // Sync with your device
+    update_led_status(1,data->sate,data->mode,data->blink_delay_on,data->blink_delay_off);
 }
 
-static struct state s_state = {30, 50};
+static struct led_3 s_led_3 = {false, 0, 100, 100};
+void glue_get_led_3(struct led_3 *data) {
+  *data = s_led_3;  // Sync with your device
+}
+void glue_set_led_3(struct led_3 *data) {
+  s_led_3 = *data; // Sync with your device
+  update_led_status(2,data->sate,data->mode,data->blink_delay_on,data->blink_delay_off);
+}
+
+static struct led_4 s_led_4 = {false, 0, 100, 100};
+void glue_get_led_4(struct led_4 *data) {
+  *data = s_led_4;  // Sync with your device
+}
+void glue_set_led_4(struct led_4 *data) {
+  s_led_4 = *data; // Sync with your device
+  update_led_status(3,data->sate,data->mode,data->blink_delay_on,data->blink_delay_off);
+}
+
+struct state s_state = {30, 50};
 void glue_get_state(struct state *data) {
-    *data = s_state;  // Sync with your device
+  *data = s_state;  // Sync with your device
+    MG_INFO(("----------update sys status cpu:%d,mem:%d---------",s_state.cpu,s_state.mem));
 }
 void glue_set_state(struct state *data) {
-    s_state = *data; // Sync with your device
+  s_state = *data; // Sync with your device
 }

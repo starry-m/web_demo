@@ -15,7 +15,7 @@ private:
     virtual void writeLED(std::string filename,std::string value);
     virtual int readLED(std::string filename);
 
-    virtual void removeTrigger();
+    void removeTrigger();
 public:
     LED(int number);
     LED(std::string path,int number);
@@ -23,7 +23,8 @@ public:
     virtual void turnOff();
     virtual void toggle();
     virtual void status_set(bool s);
-    virtual void flash(std::string delayms);
+    virtual void flash(std::string delaymson,std::string delaymsoff);
+    void change_mode_status(bool sate,int mode,int blink_delay_on,int blink_delay_off);
     virtual void outputState();
     virtual ~LED();
 };

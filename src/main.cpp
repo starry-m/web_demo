@@ -1,42 +1,31 @@
 #include "hal.h"
 #include "mongoose_glue.h"
 #include <thread>
+#include <array>
+#include <cstdio>
+#include <iostream>
 #include "mymain.h"
 #include "LED.h"
 
 using namespace std;
-int run_led=0;
-
-//LED led = LED(3);
-//LED mled0 = LED(0);
-//LED mled1 = LED(1);
-//LED mled2 = LED(2);
-static bool led_status=false;
 static void blink_timer(void *arg) {
   (void) arg;
-  gpio_write(LED1, !gpio_read(LED1));
-//  if(run_led)
-//  {
-//    if(led_status)
-//    {
-//        led_status= false;
-//        led.turnOn();
-//    } else
-//    {
-//        led_status = true;
-//        led.turnOff();
-//    }
-//  }
-
 }
+
+// 创建 LED 对象并存入容器
+std::array<LED, 4> leds = {LED(0), LED(1), LED(2), LED(3)};
+
 #if defined(__cplusplus)
 extern "C" {
 #endif
-void update_led_status(bool led1,bool led2,bool led3)
+void update_led_status(int number,bool sate,int mode,int blink_delay_on,int blink_delay_off)
 {
-//    mled0.status_set(led1);
-//    mled1.status_set(led2);
-//    mled2.status_set(led3);
+    if (number >= 0 && number < leds.size()) {
+        std::cout <<"---------------chang led status:"<<number<< std::endl;
+        leds[number].change_mode_status(sate, mode, blink_delay_on, blink_delay_off);
+    } else {
+        std::cout << "Invalid LED number: " << number << std::endl;
+    }
 }
 #if defined(__cplusplus)
 }
@@ -44,6 +33,7 @@ void update_led_status(bool led1,bool led2,bool led3)
 
 void web_thread()
 {
+    mg_log_set(MG_LL_INFO);
     MG_INFO(("HAL initialised, starting firmware..."));
     //http://127.0.0.1:8080/  HTTP_URL "http://0.0.0.0:8080"
     // This blocks forever. Call it at the end of main(), or in a
@@ -55,22 +45,52 @@ void web_thread()
     }
 }
 
+std::string execCommand(const std::string& cmd) {
+    std::array<char, 128> buffer;
+    std::string result;
+    FILE* pipe = popen(cmd.c_str(), "r");
+    if (!pipe) {
+        throw std::runtime_error("popen() failed!");
+    }
+    while (fgets(buffer.data(), buffer.size(), pipe) != nullptr) {
+        result += buffer.data();
+    }
+    pclose(pipe);
+    return result;
+}
+extern struct state s_state;
+
+void update_cpu_mem_usage()
+{
+    while(true)
+    {
+        // 执行命令并获取 CPU 和内存使用率（作为字符串）
+        std::string cpuUsageStr = execCommand("top -bn1 | grep 'Cpu(s)' | awk '{print $2}'");
+        std::string memUsageStr = execCommand("free -m | awk '/^Mem/ {print $3/$2 * 100.0}'");
+
+        // 将字符串转为整数
+        int cpuUsage = static_cast<int>(std::stof(cpuUsageStr));  // 转换为 float 再转为 int
+        int memUsage = static_cast<int>(std::stof(memUsageStr));  // 转换为 float 再转为 int
+
+        // 打印结果
+//        std::cout << "CPU 使用率: " << cpuUsage << "%" << std::endl;
+//        std::cout << "内存使用率: " << memUsage << "%" << std::endl;
+        s_state.cpu=cpuUsage;
+        s_state.mem=memUsage;
+        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+    }
+
+}
+
+
 
 int main(int argc, char* argv[]) {
-//    if(argc != 2){
-//        cout << "Args error, on/off/flash/status supported only." << endl;
-//        return 1;
-//    }
-
-    if(argc >=  2)
-    {
-        run_led=1;
-
-    }
 //    sysConfigInit();
   // Cross-platform hardware init
-  hal_init();
+    hal_init();
     std::thread mongoose_thread(web_thread);
+    std::thread usage_thread(update_cpu_mem_usage);
     mongoose_thread.join();
-  return 0;
+    usage_thread.join();
+    return 0;
 }
